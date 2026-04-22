@@ -4,9 +4,10 @@
 
 This repository contains **Claude Ads**, a Tier 4 Claude Code skill for comprehensive
 paid advertising analysis across all major platforms. It follows the Agent Skills open
-standard and the 3-layer architecture (directive, orchestration, execution). 17 sub-skills,
-10 agents (6 audit + 4 creative), and 11 industry templates cover Google, Meta, YouTube, LinkedIn,
-TikTok, Microsoft, and Apple Search Ads with 225+ weighted audit checks.
+standard and the 3-layer architecture (directive, orchestration, execution). 18 sub-skills,
+10 agents (6 audit + 4 creative), 11 industry templates, and a LinkedIn Marketing API MCP
+server cover Google, Meta, YouTube, LinkedIn, TikTok, Microsoft, and Apple Search Ads with
+225+ weighted audit checks plus programmatic LinkedIn campaign creation.
 
 ## Architecture
 
@@ -17,12 +18,13 @@ claude-ads/
     SKILL.md                         # Entry point, routing table, core rules
     references/                      # On-demand knowledge files (23 files)
     scripts/                         # Python execution scripts
-  skills/                            # 17 specialized sub-skills
+  skills/                            # 18 specialized sub-skills
     ads-audit/SKILL.md              # Full multi-platform audit
     ads-google/SKILL.md            # Google Ads deep analysis
     ads-meta/SKILL.md              # Meta/Facebook Ads analysis
     ads-youtube/SKILL.md           # YouTube Ads analysis
     ads-linkedin/SKILL.md         # LinkedIn Ads analysis
+    ads-linkedin-launch/SKILL.md  # Programmatic LinkedIn campaign creation (MCP)
     ads-tiktok/SKILL.md           # TikTok Ads analysis
     ads-microsoft/SKILL.md        # Microsoft/Bing Ads analysis
     ads-creative/SKILL.md         # Creative quality assessment
@@ -30,6 +32,11 @@ claude-ads/
     ads-budget/SKILL.md           # Budget allocation optimization
     ads-plan/SKILL.md             # Strategic ad planning by industry
     ads-competitor/SKILL.md       # Competitor ad research
+  mcp/
+    linkedin-ads/                  # MCP server: LinkedIn Marketing API wrapper
+      src/linkedin_ads_mcp/        # brief_parser, validator, launcher, server
+      README.md
+      requirements.txt
   agents/                            # 10 agents (6 audit + 4 creative)
     audit-google.md                # Google Ads audit agent
     audit-meta.md                  # Meta Ads audit agent
@@ -50,6 +57,7 @@ claude-ads/
 | `/ads meta` | Meta/Facebook Ads analysis |
 | `/ads youtube` | YouTube Ads analysis |
 | `/ads linkedin` | LinkedIn Ads analysis |
+| `/ads linkedin-launch` | Create LinkedIn campaigns from a brief via LinkedIn Marketing API MCP |
 | `/ads tiktok` | TikTok Ads analysis |
 | `/ads microsoft` | Microsoft/Bing Ads analysis |
 | `/ads creative` | Creative quality and fatigue assessment |
@@ -66,3 +74,5 @@ claude-ads/
 - Follow kebab-case naming for all skill directories
 - Agents invoked via Task tool with `context: fork`, never via Bash
 - No hardcoded credentials; use MCP servers for external API access
+- Mutating MCP tools (campaign creation, etc.) default to dry-run and require
+  explicit `confirm=true`; creates default to `DRAFT` status unless `activate=true`

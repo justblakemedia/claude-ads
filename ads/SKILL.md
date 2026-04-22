@@ -1,7 +1,7 @@
 ---
 name: ads
-description: "Multi-platform paid advertising audit and optimization skill. Analyzes Google, Meta, YouTube, LinkedIn, TikTok, Microsoft, and Apple Search Ads. 225+ checks with scoring, parallel agents, industry templates, and AI creative generation."
-argument-hint: "audit | google | meta | youtube | linkedin | tiktok | microsoft | apple | creative | landing | budget | plan <type> | competitor | dna <url> | create | generate | photoshoot"
+description: "Multi-platform paid advertising audit and optimization skill. Analyzes Google, Meta, YouTube, LinkedIn, TikTok, Microsoft, and Apple Search Ads. 225+ checks with scoring, parallel agents, industry templates, AI creative generation, and programmatic LinkedIn campaign launch."
+argument-hint: "audit | google | meta | youtube | linkedin | linkedin-launch | tiktok | microsoft | apple | creative | landing | budget | plan <type> | competitor | dna <url> | create | generate | photoshoot"
 license: MIT
 ---
 
@@ -20,6 +20,7 @@ LinkedIn, TikTok, Microsoft). Orchestrates 17 specialized sub-skills and
 | `/ads meta` | Meta Ads deep analysis (FB, IG, Advantage+) |
 | `/ads youtube` | YouTube Ads specific analysis |
 | `/ads linkedin` | LinkedIn Ads deep analysis (B2B, Lead Gen) |
+| `/ads linkedin-launch` | Programmatically create LinkedIn campaigns from a brief via MCP (requires MDP API access) |
 | `/ads tiktok` | TikTok Ads deep analysis (Creative, Shop, Smart+) |
 | `/ads microsoft` | Microsoft/Bing Ads deep analysis (Copilot, Import) |
 | `/ads creative` | Cross-platform creative quality audit |
@@ -76,6 +77,9 @@ Sequential pipeline (each step is independently runnable):
 2. `/ads create` → reads profile + optional audit results → `campaign-brief.md`
 3. `/ads generate` → reads brief + profile → `ad-assets/` directory
 4. `/ads photoshoot` → standalone or reads profile for style injection
+5. `/ads linkedin-launch` → reads `campaign-brief.md` + assets → live campaigns
+   in LinkedIn Campaign Manager (via `linkedin-ads` MCP server; requires
+   LinkedIn Marketing Developer Platform API access)
 
 Requires `GOOGLE_API_KEY` (Gemini default) or `ADS_IMAGE_PROVIDER` + matching key.
 If API key is missing, `/ads generate` and `/ads photoshoot` display setup
@@ -137,6 +141,8 @@ When sub-skills or agents reference `ads/references/*.md`, resolve to
 - `references/gaql-notes.md`: GAQL field compatibility, deduplication patterns, filter scope best practices
 - `references/voice-to-style.md`: Brand voice axis to visual attribute mapping for image generation
 - `references/copy-frameworks.md`: 6 ad copy frameworks (AIDA, PAS, BAB, 4P, FAB, Star-Story-Solution)
+- `references/linkedin-api.md`: LinkedIn Marketing API endpoints, OAuth setup, MDP application process
+- `references/linkedin-launch-brief-schema.md`: `## LinkedIn Launch Config` YAML schema used by `/ads linkedin-launch`
 
 ## Scoring Methodology
 
@@ -168,7 +174,7 @@ Aggregate = Sum(Platform_Score x Platform_Budget_Share)
 
 ## Sub-Skills
 
-This skill orchestrates 17 specialized sub-skills:
+This skill orchestrates 18 specialized sub-skills:
 
 1. **ads-audit**: Full multi-platform audit with parallel delegation
 2. **ads-google**: Google Ads deep analysis (Search, PMax, YouTube)
@@ -187,6 +193,7 @@ This skill orchestrates 17 specialized sub-skills:
 15. **ads-create**: Campaign concepts, copy decks, creative briefs
 16. **ads-generate**: AI image generation with pluggable providers
 17. **ads-photoshoot**: Product photography in 5 professional styles
+18. **ads-linkedin-launch**: Programmatic LinkedIn campaign creation via MCP server
 
 ## Subagents
 

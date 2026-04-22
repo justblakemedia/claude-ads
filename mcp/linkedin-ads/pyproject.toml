@@ -1,0 +1,17 @@
+[build-system]
+requires = ["setuptools>=68.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "linkedin-ads-mcp"
+version = "0.1.0"
+description = "MCP server for programmatic LinkedIn ad campaign creation"
+requires-python = ">=3.10"
+dependencies = [
+    "mcp>=1.2.0,<2.0.0",
+    "httpx>=0.27.0,<1.0.0",
+    "pyyaml>=6.0.1,<7.0.0",
+]
+
+[tool.setuptools.packages.find]
+where = ["src"]
